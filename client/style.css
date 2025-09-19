@@ -24,13 +24,14 @@ body, html {
     left: 0;
     width: 100%;
     height: 8px;
+    z-index: 10;
     background-color: #e0e0e0;
 }
 
 .progress-bar {
     width: 10%; /* 일단 10%만 채워진 상태로 시작 */
     height: 100%;
-    background-color: #007bff;
+    background-color: #C1042A; /* FC서울 메인 컬러 */
     transition: width 0.5s ease-in-out;
 }
 
@@ -48,22 +49,31 @@ body, html {
 .question-content {
     text-align: center;
     max-width: 500px;
+    width: 90%;
 }
 
 h2 {
     font-size: 1.8rem;
     margin-bottom: 30px;
     line-height: 1.5;
+    color: #333;
 }
 
 /* --- 입력 요소들 스타일 --- */
-.text-input {
+.text-input, .select-box {
     width: 100%;
     padding: 15px;
     font-size: 1.2rem;
     border: 2px solid #ccc;
     border-radius: 8px;
     margin-bottom: 20px;
+    -webkit-appearance: none; /* iOS 기본 스타일 제거 */
+    appearance: none;
+}
+
+.select-box {
+    background: white url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007AFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E') no-repeat right 15px center;
+    background-size: 14px;
 }
 
 .choice-buttons {
@@ -85,7 +95,12 @@ h2 {
 
 .choice-btn:hover {
     background-color: #f5f5f5;
-    border-color: #007bff;
+}
+
+.choice-btn.selected {
+    border-color: #C1042A;
+    background-color: #fff0f3;
+    font-weight: bold;
 }
 
 /* 파일 첨부 버튼 숨기기 및 라벨 디자인 */
@@ -103,6 +118,57 @@ h2 {
     margin-bottom: 30px;
 }
 
+/* --- 주의사항 및 체크박스 스타일 --- */
+.agreement-box {
+    width: 100%;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: left;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #495057;
+}
+
+.checkbox-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.checkbox-input {
+    display: none; /* 기본 체크박스 숨기기 */
+}
+
+.checkbox-label {
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-label::before {
+    content: '';
+    width: 22px;
+    height: 22px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.checkbox-input:checked + .checkbox-label::before {
+    background-color: #C1042A;
+    border-color: #C1042A;
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"%3e%3cpath fill="%23fff" d="M6.564.75l-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z"/%3e%3c/svg%3e');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+
 /* --- 이전/다음 버튼 스타일 --- */
 .navigation-buttons {
     display: flex;
@@ -113,13 +179,23 @@ h2 {
 .next-btn, .prev-btn, .submit-btn {
     padding: 12px 30px;
     font-size: 1rem;
+    font-weight: bold;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    background-color: #007bff;
+    background-color: #C1042A;
     color: white;
+    transition: background-color 0.2s;
+}
+
+.next-btn:hover, .submit-btn:hover {
+    background-color: #a10322;
 }
 
 .prev-btn {
     background-color: #6c757d;
+}
+
+.prev-btn:hover {
+    background-color: #5a6268;
 }

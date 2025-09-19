@@ -1,0 +1,147 @@
+// 1. 필요한 모든 HTML 요소들을 선택합니다.
+const sections = document.querySelectorAll('.question-section');
+const progressBar = document.querySelector('.progress-bar');
+const prevBtns = document.querySelectorAll('.prev-btn');
+const nextBtns = document.querySelectorAll('.next-btn');
+const choiceBtns = document.querySelectorAll('.choice-btn');
+const submitBtn = document.querySelector('.submit-btn');
+
+// 2. 전체 질문 개수와 현재 질문 인덱스, 답변을 저장할 객체를 설정합니다.
+const totalQuestions = sections.length;
+let currentQuestionIndex = 0;
+const answers = {};
+
+// 3. 특정 질문으로 화면을 부드럽게 이동하고 진행 바를 업데이트하는 함수입니다.
+const navigateToQuestion = (index) => {
+    sections[index].scrollIntoView({ behavior: 'smooth' });
+    
+    // 진행 바 너비 업데이트
+    const progress = ((index + 1) / totalQuestions) * 100;
+    progressBar.style.width = `${progress}%`;
+    currentQuestionIndex = index;
+};
+
+// 4. 현재 질문의 답변을 answers 객체에 저장하는 함수입니다.
+const saveAnswer = () => {
+    const currentSection = sections[currentQuestionIndex];
+    const questionKey = currentSection.dataset.question;
+
+    // 질문 유형에 따라 답변을 저장합니다.
+    const textInput = currentSection.querySelector('.text-input');
+    if (textInput) {
+        answers[questionKey] = textInput.value;
+    }
+
+    const selectedChoice = currentSection.querySelector('.choice-btn.selected');
+    if (selectedChoice) {
+        answers[questionKey] = selectedChoice.dataset.value;
+    }
+
+    const selectBox = currentSection.querySelector('.select-box');
+    if (selectBox) {
+        answers[questionKey] = selectBox.value;
+    }
+
+    const checkbox = currentSection.querySelector('.checkbox-input');
+    if (checkbox) {
+        answers[questionKey] = checkbox.checked; // true 또는 false
+    }
+};
+
+// 5. 현재 질문에 대한 유효성을 검사하는 함수입니다.
+const validateCurrentAnswer = () => {
+    const currentSection = sections[currentQuestionIndex];
+    const questionKey = currentSection.dataset.question;
+    const answer = answers[questionKey];
+
+    // ⬇️ 여기에 'fan_photo' 조건을 추가했습니다.
+    // 필수 입력이 아닌 질문들은 유효성 검사를 통과시킵니다.
+    if (questionKey === 'companion' || questionKey === 'fan_photo') {
+        return true;
+    }
+
+    // 값이 없거나(undefined, null, 빈 문자열), false인 경우 (체크박스)
+    if (answer === undefined || answer === null || answer === '' || answer === false) {
+        alert('필수 항목을 입력하거나 선택해주세요!');
+        return false;
+    }
+
+    return true;
+};
+
+
+// --- 이벤트 리스너 설정 ---
+
+// 6. '다음' 버튼들에 클릭 이벤트를 추가합니다.
+nextBtns.forEach(button => {
+    button.addEventListener('click', () => {
+        saveAnswer();
+        if (validateCurrentAnswer()) {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                navigateToQuestion(currentQuestionIndex + 1);
+            }
+        }
+    });
+});
+
+// 7. '이전' 버튼들에 클릭 이벤트를 추가합니다.
+prevBtns.forEach(button => {
+    button.addEventListener('click', () => {
+        if (currentQuestionIndex > 0) {
+            navigateToQuestion(currentQuestionIndex - 1);
+        }
+    });
+});
+
+// 8. 객관식 버튼들에 클릭 이벤트를 추가하여 선택 효과를 줍니다.
+choiceBtns.forEach(button => {
+    button.addEventListener('click', () => {
+        const parentSection = button.closest('.question-section');
+        parentSection.querySelectorAll('.choice-btn').forEach(btn => btn.classList.remove('selected'));
+        button.classList.add('selected');
+    });
+});
+
+// 9. '제출하기' 버튼에 서버 전송 이벤트를 추가합니다.
+submitBtn.addEventListener('click', async () => {
+    saveAnswer(); // 마지막 답변 저장
+    if (!validateCurrentAnswer()) {
+        return; // 유효성 검사 실패 시 전송 중단
+    }
+
+    console.log('최종 답변:', answers);
+
+    // ⚠️ 파일 업로드는 별도의 처리가 필요합니다.
+    // 여기서는 텍스트 데이터만 먼저 전송합니다.
+    // 5일차에 파일 업로드 기능을 구현할 예정입니다!
+    const dataToSend = {
+        name: answers.user_name,
+        contact: answers.contact,
+        answers: answers,
+    };
+
+    try {
+        const response = await fetch('http://localhost:5000/api/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dataToSend),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            // 성공 시 감사 메시지를 보여주는 마지막 화면으로 이동
+            const lastSection = document.querySelector('[data-question="thank_you"]');
+            if (lastSection) {
+                 lastSection.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                 alert('신청서가 성공적으로 제출되었습니다!');
+            }
+        } else {
+            alert(`제출 실패: ${result.message}`);
+        }
+    } catch (error) {
+        console.error('제출 중 오류 발생:', error);
+        alert('서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.');
+    }
+});

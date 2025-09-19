@@ -3,6 +3,7 @@
 import os
 import json
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import psycopg2 # PostgreSQL 연동을 위한 라이브러리
 from dotenv import load_dotenv
 
@@ -10,6 +11,8 @@ load_dotenv()
 
 # Flask 앱 생성
 app = Flask(__name__)
+CORS(app)
+
 DATABASE_URL = os.getenv('DATABASE_URL')
 
 # 데이터베이스와 연결을 시도하는 함수 (예시)
