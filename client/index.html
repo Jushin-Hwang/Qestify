@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questify - 참가 신청서</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="survey-container">
+        <div class="progress-bar-container">
+            <div class="progress-bar"></div>
+        </div>
+
+        <section class="question-section">
+            <div class="question-content">
+                <h2>반가워요! 당신의 이름은 무엇인가요?</h2>
+                <input type="text" placeholder="이름을 입력해주세요" class="text-input">
+                <div class="navigation-buttons">
+                    <button class="next-btn">다음</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="question-section">
+            <div class="question-content">
+                <h2>이번 프로젝트에 참여하시겠어요?</h2>
+                <div class="choice-buttons">
+                    <button class="choice-btn">O (참여할래요!) </button>
+                    <button class="choice-btn">X (고민해볼래요.)</button>
+                </div>
+                <div class="navigation-buttons">
+                    <button class="prev-btn">이전</button>
+                    <button class="next-btn">다음</button>
+                </div>
+            </div>
+        </section>
+        
+        <section class="question-section">
+            <div class="question-content">
+                <h2>당신을 가장 잘 나타내는 사진을 첨부해주세요.</h2>
+                <input type="file" id="file-upload" class="file-input" accept="image/*">
+                <label for="file-upload" class="file-label">파일 선택하기</label>
+                <div class="navigation-buttons">
+                    <button class="prev-btn">이전</button>
+                    <button class="submit-btn">제출하기</button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</body>
+</html>
