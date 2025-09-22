@@ -5,6 +5,9 @@ const prevBtns = document.querySelectorAll('.prev-btn');
 const nextBtns = document.querySelectorAll('.next-btn');
 const choiceBtns = document.querySelectorAll('.choice-btn');
 const submitBtn = document.querySelector('.submit-btn');
+const fileInput = document.querySelector('#file-upload');
+const imagePreview = document.querySelector('#image-preview')
+
 
 // 2. 전체 질문 개수와 현재 질문 인덱스, 답변을 저장할 객체를 설정합니다.
 const totalQuestions = sections.length;
@@ -46,6 +49,15 @@ const saveAnswer = () => {
     if (checkbox) {
         answers[questionKey] = checkbox.checked; // true 또는 false
     }
+
+        const fileInput = currentSection.querySelector('.file-input');
+    if (fileInput && fileInput.files.length > 0) {
+        // 파일이 선택되었다는 사실을 기록 (파일명 저장)
+        answers[questionKey] = fileInput.files[0].name;
+    } else if (fileInput) {
+        // 파일이 선택되지 않았다면 값을 비워둠
+        delete answers[questionKey];
+    }
 };
 
 // 5. 현재 질문에 대한 유효성을 검사하는 함수입니다.
@@ -54,9 +66,8 @@ const validateCurrentAnswer = () => {
     const questionKey = currentSection.dataset.question;
     const answer = answers[questionKey];
 
-    // ⬇️ 여기에 'fan_photo' 조건을 추가했습니다.
     // 필수 입력이 아닌 질문들은 유효성 검사를 통과시킵니다.
-    if (questionKey === 'companion' || questionKey === 'fan_photo') {
+    if (questionKey === 'companion') {
         return true;
     }
 
@@ -102,35 +113,51 @@ choiceBtns.forEach(button => {
     });
 });
 
+// 파일 입력 시 이미지 미리보기를 보여주는 이벤트 리스너
+fileInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = 'block'; // 숨겨뒀던 이미지 태그를 보여줌
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+
 // 9. '제출하기' 버튼에 서버 전송 이벤트를 추가합니다.
 submitBtn.addEventListener('click', async () => {
-    saveAnswer(); // 마지막 답변 저장
-    if (!validateCurrentAnswer()) {
-        return; // 유효성 검사 실패 시 전송 중단
+    saveAnswer();
+    if (!validateCurrentAnswer()) return;
+
+    // 1. FormData 객체를 생성합니다.
+    const formData = new FormData();
+
+    // 2. 텍스트 데이터를 FormData에 추가합니다.
+    formData.append('name', answers.user_name);
+    formData.append('contact', answers.contact);
+    formData.append('answers', JSON.stringify(answers)); // answers 객체는 JSON 문자열로 변환
+
+    // 3. 이미지 파일을 FormData에 추가합니다.
+    const photoFile = fileInput.files[0];
+    if (photoFile) {
+        formData.append('fan_photo', photoFile);
     }
 
-    console.log('최종 답변:', answers);
-
-    // ⚠️ 파일 업로드는 별도의 처리가 필요합니다.
-    // 여기서는 텍스트 데이터만 먼저 전송합니다.
-    // 5일차에 파일 업로드 기능을 구현할 예정입니다!
-    const dataToSend = {
-        name: answers.user_name,
-        contact: answers.contact,
-        answers: answers,
-    };
-
     try {
+        // 4. fetch 요청을 보냅니다.
+        // ⚠️ 중요: FormData를 보낼 때는 headers의 'Content-Type'을 제거해야 합니다.
+        // 브라우저가 자동으로 'multipart/form-data'로 설정해줍니다.
         const response = await fetch('http://localhost:5000/api/submit', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dataToSend),
+            body: formData, // JSON.stringify 대신 formData 객체를 그대로 전달
         });
 
         const result = await response.json();
 
         if (result.success) {
-            // 성공 시 감사 메시지를 보여주는 마지막 화면으로 이동
             const lastSection = document.querySelector('[data-question="thank_you"]');
             if (lastSection) {
                  lastSection.scrollIntoView({ behavior: 'smooth' });
