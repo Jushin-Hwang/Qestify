@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Questify - 참가 신청서</title>
+    <title>마음에 드는 사람을 골라주세요!</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,96 +12,33 @@
             <div class="progress-bar"></div>
         </div>
 
+        <!-- 추가된 섹션: 이름 입력 -->
         <section class="question-section" data-question="user_name">
-            <h2>당신의 이름은 무엇인가요?</h2>
-            <input type="text" placeholder="이름을 입력해주세요" class="text-input">
-            <div class="navigation-buttons">
-                <button class="next-btn">다음</button>
+            <div class="question-content">
+                <h2>당신의 테이블 번호, 등번호, 이름을 알려주세요!</h2>
+                <input type="text" placeholder="예: 1번 테이블 10번 안데르손" class="text-input">
+                <div class="navigation-buttons">
+                    <button class="next-btn">다음</button>
+                </div>
             </div>
         </section>
 
-        <section class="question-section" data-question="gender">
-            <h2>성별을 선택해주세요.</h2>
-            <div class="choice-buttons">
-                <button class="choice-btn" data-value="male">남성</button>
-                <button class="choice-btn" data-value="female">여성</button>
-            </div>
-            <div class="navigation-buttons">
-                <button class="prev-btn">이전</button>
-                <button class="next-btn">다음</button>
-            </div>
-        </section>
-
-        <section class="question-section" data-question="birth_year">
-            <h2>출생연도를 선택해주세요.</h2>
-            <select class="select-box">
-                <option value="">선택</option>
-                <option value="2005">2005년</option>
-                <option value="2004">2004년</option>
-                <option value="2003">2003년</option>
-                <option value="1980">1980년</option>
-            </select>
-            <div class="navigation-buttons">
-                <button class="prev-btn">이전</button>
-                <button class="next-btn">다음</button>
-            </div>
-        </section>
-
-        <section class="question-section" data-question="contact">
-            <h2>연락처를 알려주세요.</h2>
-            <input type="tel" placeholder="'-' 없이 숫자만 입력" class="text-input">
-            <div class="navigation-buttons">
-                <button class="prev-btn">이전</button>
-                <button class="next-btn">다음</button>
-            </div>
-        </section>
-
-        <section class="question-section" data-question="fan_photo">
-            <h2>FC서울 팬 인증 사진을 첨부해주세요.</h2>
-            <img id="image-preview" src="#" alt="이미지 미리보기" class="image-preview">
-            <input type="file" id="file-upload" class="file-input" accept="image/*">
-            <label for="file-upload" class="file-label">사진 선택하기</label>
-            <div class="navigation-buttons">
-                <button class="prev-btn">이전</button>
-                <button class="next-btn">다음</button>
-            </div>
-        </section>
-
-        <section class="question-section" data-question="seat_choice">
-            <h2>원하는 좌석 구역을 선택해주세요.</h2>
-            <div class="choice-buttons">
-                <button class="choice-btn" data-value="N">N석 (응원석)</button>
-                <button class="choice-btn" data-value="E">E석 (본부석 맞은편)</button>
-                <button class="choice-btn" data-value="W">W석 (본부석)</button>
-            </div>
-            <div class="navigation-buttons">
-                <button class="prev-btn">이전</button>
-                <button class="next-btn">다음</button>
-            </div>
-        </section>
-
-        <section class="question-section" data-question="agreement">
-            <h2>아래 주의사항을 확인하셨나요?</h2>
-            <div class="agreement-box">
-                <p>본 이벤트는 FC서울 팬들을 위한 이벤트입니다. 입장 시 팬 인증을 요청할 수 있으며, 어웨이팀 유니폼 착용 시 입장이 제한될 수 있습니다.</p>
-            </div>
-            <div class="checkbox-container">
-                <input type="checkbox" id="agree-checkbox" class="checkbox-input">
-                <label for="agree-checkbox" class="checkbox-label">네, 확인했습니다.</label>
-            </div>
-            <div class="navigation-buttons">
-                <button class="prev-btn">이전</button>
-                <button class="submit-btn">최종 제출하기</button>
+        <section class="question-section" data-question="user_answer">
+            <div class="question-content">
+                <h2>마음에 드는 사람의 테이블과 등번호를 써주세요!</h2>
+                <input type="text" placeholder="2번 테이블 9번 조영욱님 눈웃음이 너무 예뻐요!" class="text-input">
+                <div class="navigation-buttons">
+                    <button class="prev-btn">이전</button>
+                    <button class="submit-btn">최종 제출하기</button>
+                </div>
             </div>
         </section>
 
         <section class="question-section" data-question="thank_you">
             <div class="question-content">
-                <h2>제출 완료!</h2>
-                <p style="font-size: 1.2rem; line-height: 1.6;">
-                    신청해주셔서 감사합니다.<br>
-                    자세한 내용은 기입하신 연락처로 안내될 예정입니다.
-                </p>
+                <h1>제출 완료!</h1>
+                <h2>응답이 정상적으로 기록되었습니다!</h2>
+
             </div>
         </section>
 

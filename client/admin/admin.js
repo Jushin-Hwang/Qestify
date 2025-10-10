@@ -9,18 +9,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. 서버에서 모든 신청서 데이터를 가져와서 표를 채웁니다.
     const loadApplications = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/applications');
+            const response = await fetch('http://35.238.93.210:5000/api/applications');
             applicationsData = await response.json();
+
+            console.log(applicationsData);
             
             tableBody.innerHTML = ''; // 기존 내용을 비웁니다.
 
             applicationsData.forEach(app => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${app.id}</td>
-                    <td>${app.name}</td>
-                    <td>${app.contact}</td>
-                    <td>${app.to_char}</td>
+                    <td>${app[0]}</td>
+                    <td>${app[1]}</td>
+                    <td>${app[2]}</td>
                 `;
                 // 각 행에 클릭 이벤트를 추가하여 모달을 엽니다.
                 row.addEventListener('click', () => showDetail(app.id));
@@ -47,17 +48,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (app.image_url) {
             // GCP URL을 로컬 서버 URL로 변환해야 할 수 있습니다. 
             // 일단은 그대로 사용합니다.
-            detailHtml += `<p><strong>fan_photo:</strong></p><img src="http://localhost:5000/${app.image_url}" alt="팬 인증 사진">`;
+            detailHtml += `<p><strong>fan_photo:</strong></p><img src="http://35.238.93.210:5000/${app.image_url}" alt="팬 인증 사진">`;
         }
 
         modalBody.innerHTML = detailHtml;
         modal.style.display = 'block';
     };
-
-    // 3. CSV 내보내기 버튼 클릭 이벤트
-    exportCsvBtn.addEventListener('click', () => {
-        window.location.href = 'http://localhost:5000/api/export_csv';
-    });
 
     // 4. 모달 닫기 이벤트
     closeModalBtn.addEventListener('click', () => {
